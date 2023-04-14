@@ -1,7 +1,0 @@
-﻿  Serveur.cpp
-C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Serveur\Serveur.cpp(288,88): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Serveur\Serveur.cpp(356,42): warning C4244: 'initialisation' : conversion de 'std::streamoff' en 'int', perte possible de données
-C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Serveur\Serveur.cpp(378,84): warning C4244: 'argument' : conversion de 'std::streamsize' en 'int', perte possible de données
-C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Serveur\Serveur.cpp(432,98): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Serveur\Serveur.cpp(93,9): warning C4101: 'iSendResult' : variable locale non référencée
-  HERI05539800_Lab3-Serveur.vcxproj -> C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Serveur\x64\Debug\HERI05539800_Lab3-Serveur.exe

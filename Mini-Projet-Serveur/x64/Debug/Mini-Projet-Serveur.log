@@ -1,0 +1,7 @@
+﻿  Mini-Projet-Serveur.cpp
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(288,88): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(356,42): warning C4244: 'initialisation' : conversion de 'std::streamoff' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(378,84): warning C4244: 'argument' : conversion de 'std::streamsize' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(432,98): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(93,9): warning C4101: 'iSendResult' : variable locale non référencée
+  Mini-Projet-Serveur.vcxproj -> C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\x64\Debug\Mini-Projet-Serveur.exe
