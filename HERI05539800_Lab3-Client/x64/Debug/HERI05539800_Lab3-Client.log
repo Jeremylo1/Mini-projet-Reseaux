@@ -1,0 +1,10 @@
+﻿  Client.cpp
+C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Client\Client.cpp(138,77): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Client\Client.cpp(168,81): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Client\Client.cpp(197,77): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Client\Client.cpp(216,91): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Client\Client.cpp(315,87): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Client\Client.cpp(348,83): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Client\Client.cpp(429,45): warning C4101: 'ex' : variable locale non référencée
+C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Client\Client.cpp(472,45): warning C4101: 'ex' : variable locale non référencée
+  HERI05539800_Lab3-Client.vcxproj -> C:\Users\jerem\Downloads\HERI05539800_Lab3\HERI05539800_Lab3-Client\x64\Debug\HERI05539800_Lab3-Client.exe
