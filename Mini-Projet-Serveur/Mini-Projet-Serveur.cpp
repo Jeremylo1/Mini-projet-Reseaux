@@ -28,6 +28,7 @@ https://learn.microsoft.com/fr-fr/windows/win32/winsock/complete-server-code */
 #include <stdexcept>
 #include <cstdio>
 #include <direct.h>
+#include <filesystem>
 
 #pragma comment (lib, "Ws2_32.lib")
 
@@ -46,9 +47,23 @@ void executeWindowsCommand(const std::string& cmd, std::string& output, std::str
     commandToExecute = "cd " + currentDirectory + " && ";
 
     // Si la commande est "cd", ajoutez " && echo %cd%"
+    // Si la commande est "cd", changez le répertoire de travail.
     if (cmd.substr(0, 2) == "cd")
     {
-        commandToExecute += cmd + " && echo %cd%";
+        std::string newDir = cmd.substr(3);
+        if (newDir.back() == '\n') {
+            newDir.pop_back(); // Supprimez le caractère de nouvelle ligne, s'il y en a un.
+        }
+        try
+        {
+            std::filesystem::current_path(newDir);
+            currentDirectory = std::filesystem::current_path().string();
+            output = currentDirectory;
+        }
+        catch (const std::filesystem::filesystem_error& e)
+        {
+            output = "Erreur : Impossible de changer le répertoire de travail.\n";
+        }
     }
     else
     {
