@@ -115,55 +115,37 @@ int __cdecl main(int argc, char** argv)
     }
     else
     {
-        std::cout << std::endl << "-> TENTATIVE DE CONNEXION" << std::endl;
+        std::cout << std::endl << "-> CONNEXION AU SERVEUR ..." << std::endl;
     }
 
-    /* SECTION - VALIDATION DES CODES D'ACCÈS */
-    //Demande de l'identifiant au client.
-    std::string id;
-    std::cout << std::endl << "Entrez votre identifiant : ";
-    std::cin >> id;
-
-    //Demande du mot de passe au client.
-    std::string password;
-    std::cout << "Entrez votre mot de passe : ";
-    std::cin >> password;
-
-    //Concaténation des codes d'accès.
-    std::string accessCode = id + "~" + password;
-
-    //Envoi des codes d'accès au serveur.
-    iResult = send(ConnectSocket, accessCode.c_str(), accessCode.length(), 0);
-    if (iResult == SOCKET_ERROR)
+    //Accès au serveur.
+    do  //Le client peut effectuer des actions ...
     {
-        std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
-        closesocket(ConnectSocket);
-        WSACleanup();
-        return 1;
-    }
+        //Affichage du menu.
+        choice = Menu();
+        std::string optionNb = std::to_string(choice);
 
-    //Réception de la réponse du serveur.
-    iResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
-    if (iResult == SOCKET_ERROR)
-    {
-        std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
-        closesocket(ConnectSocket);
-        WSACleanup();
-        return 1;
-    }
-    std::cout << std::endl << "-> RÉPONSE DU SERVEUR : " << std::string(buffer, iResult) << std::endl;
-    /* FIN DE LA SECTION */
-
-    if (iResult == 14)  //Si l'accès est autorisé.
-    {
-        do  //Le client peut effectuer des actions.
+        //Envoi du choix de l'option au serveur (menu principal).
+        iResult = send(ConnectSocket, optionNb.c_str(), optionNb.length(), 0);
+        if (iResult == SOCKET_ERROR)
         {
-            //Affichage du menu.
-            choice = Menu();
-            std::string optionNb = std::to_string(choice);
+            std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
+            closesocket(ConnectSocket);
+            WSACleanup();
+            return 1;
+        }
 
-            //Envoi du choix de l'option au serveur (menu principal).
-            iResult = send(ConnectSocket, optionNb.c_str(), optionNb.length(), 0);
+        /* SECTION - TÉLÉCHARGER UN FICHIER */
+        if (choice == 1)
+        {
+            //Demande du nom du fichier à télécharger.
+            std::string fileName;
+            std::cout << "Entrez le nom du fichier (du répertoire courant) à télécharger : ";
+            std::cin.ignore();
+            std::getline(std::cin, fileName);
+
+            //Envoi du nom de fichier à télécharger au serveur.
+            iResult = send(ConnectSocket, fileName.c_str(), fileName.size() + 1, 0);
             if (iResult == SOCKET_ERROR)
             {
                 std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
@@ -172,27 +154,21 @@ int __cdecl main(int argc, char** argv)
                 return 1;
             }
 
-            /* SECTION - TÉLÉCHARGER UN FICHIER */
-            if (choice == 1)
+            //Réception de la vérification de l'existence du fichier.
+            iResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
+            if (iResult == SOCKET_ERROR)
             {
-                //Demande du nom du fichier à télécharger.
-                std::string fileName;
-                std::cout << "Entrez le nom du fichier (du répertoire courant) à télécharger : ";
-                std::cin.ignore();
-                std::getline(std::cin, fileName);
+                std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
+                closesocket(ConnectSocket);
+                WSACleanup();
+                return 1;
+            }
 
-                //Envoi du nom de fichier à télécharger au serveur.
-                iResult = send(ConnectSocket, fileName.c_str(), fileName.size() + 1, 0);
-                if (iResult == SOCKET_ERROR)
-                {
-                    std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
-                    closesocket(ConnectSocket);
-                    WSACleanup();
-                    return 1;
-                }
-
-                //Réception de la vérification de l'existence du fichier.
-                iResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
+            if (iResult == 10)  //Si le fichier demandé existe.
+            {
+                //Réception de la taille du fichier.
+                int fileSize;
+                iResult = recv(ConnectSocket, (char*)&fileSize, sizeof(fileSize), 0);
                 if (iResult == SOCKET_ERROR)
                 {
                     std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
@@ -201,12 +177,27 @@ int __cdecl main(int argc, char** argv)
                     return 1;
                 }
 
-                if (iResult == 10)  //Si le fichier demandé existe.
+                //Ouverture du fichier pour enregistrement (répertoire courant).
+                std::ofstream file;
+                file.open(fileName, std::ios::binary);
+
+                //Vérification de l'ouverture du fichier.
+                if (!file.is_open())
                 {
-                    //Réception de la taille du fichier.
-                    int fileSize;
-                    iResult = recv(ConnectSocket, (char*)&fileSize, sizeof(fileSize), 0);
-                    if (iResult == SOCKET_ERROR)
+                    std::cerr << "Impossible d'ouvrir le fichier pour enregistrement !" << std::endl;
+                    closesocket(ConnectSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
+                //Réception du fichier par parties.
+                int receivedBytes;
+                int totalBytesReceived = 0;
+
+                while ((totalBytesReceived < fileSize))
+                {
+                    receivedBytes = recv(ConnectSocket, recvbuf, recvbuflen, 0);
+                    if (receivedBytes == SOCKET_ERROR)
                     {
                         std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
                         closesocket(ConnectSocket);
@@ -214,109 +205,81 @@ int __cdecl main(int argc, char** argv)
                         return 1;
                     }
 
-                    //Ouverture du fichier pour enregistrement (répertoire courant).
-                    std::ofstream file;
-                    file.open(fileName, std::ios::binary);
+                    //Écriture des données dans le fichier.
+                    file.write(recvbuf, receivedBytes);
 
-                    //Vérification de l'ouverture du fichier.
-                    if (!file.is_open())
-                    {
-                        std::cerr << "Impossible d'ouvrir le fichier pour enregistrement !" << std::endl;
-                        closesocket(ConnectSocket);
-                        WSACleanup();
-                        return 1;
-                    }
+                    //Mise à jour du nombre total de bytes reçus.
+                    totalBytesReceived += receivedBytes;
+                }
 
-                    //Réception du fichier par parties.
-                    int receivedBytes;
-                    int totalBytesReceived = 0;
-
-                    while ((totalBytesReceived < fileSize))
-                    {
-                        receivedBytes = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-                        if (receivedBytes == SOCKET_ERROR)
-                        {
-                            std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
-                            closesocket(ConnectSocket);
-                            WSACleanup();
-                            return 1;
-                        }
-
-                        //Écriture des données dans le fichier.
-                        file.write(recvbuf, receivedBytes);
-
-                        //Mise à jour du nombre total de bytes reçus.
-                        totalBytesReceived += receivedBytes;
-                    }
-
-                    //Vérifie que toutes les données ont été reçues.
-                    if (totalBytesReceived != fileSize)
-                    {
-                        std::cerr << "Erreur : Taille du fichier reçue différente de la taille attendue !" << std::endl;
-                        closesocket(ConnectSocket);
-                        WSACleanup();
-                        return 1;
-                    }
-                    else
-                    {
-                        std::cout << std::endl << "-> FICHIER TÉLÉCHARGÉ AVEC SUCCÈS !" << std::endl;
-                        std::cout << "-> Localisation : dans le répertoire courant." << std::endl;
-                    }
-
-                    //Fermeture du fichier.
-                    file.close();
+                //Vérifie que toutes les données ont été reçues.
+                if (totalBytesReceived != fileSize)
+                {
+                    std::cerr << "Erreur : Taille du fichier reçue différente de la taille attendue !" << std::endl;
+                    closesocket(ConnectSocket);
+                    WSACleanup();
+                    return 1;
                 }
                 else
                 {
-                    std::cerr << std::endl << "-> FICHIER DEMANDÉ INEXISTANT !" << std::endl;
+                    std::cout << std::endl << "-> FICHIER TÉLÉCHARGÉ AVEC SUCCÈS !" << std::endl;
+                    std::cout << "-> Localisation : dans le répertoire courant." << std::endl;
                 }
+
+                //Fermeture du fichier.
+                file.close();
             }
-            /* FIN DE LA SECTION */
-
-            /* SECTION - TRANSMETTRE UN FICHIER */
-            /*if (choice == 2)
+            else
             {
-
-            }*/
-            /* FIN DE LA SECTION */
-
-            /* SECTION - COMMANDE WINDOWS */
-            if (choice == 3)
-            {
-                // Affiche et envoie la commande au serveur
-                std::string command;
-                std::cout << "Entrez la commande à exécuter sur le serveur: ";
-                std::cin.ignore();
-                std::getline(std::cin, command);
-
-                std::cout << "commande : " << command << std::endl;
-
-                // Envoi de la commande au serveur
-                iResult = send(ConnectSocket, command.c_str(), command.length(), 0);
-                if (iResult == SOCKET_ERROR)
-                {
-                    std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
-                    closesocket(ConnectSocket);
-                    WSACleanup();
-                    return 1;
-                }
-
-                // Réception de la réponse du serveur
-                memset(buffer, 0, BUFFER_SIZE);
-                iResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
-                if (iResult == SOCKET_ERROR)
-                {
-                    std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
-                    closesocket(ConnectSocket);
-                    WSACleanup();
-                    return 1;
-                }
-                std::cout << std::endl << "-> RÉPONSE DU SERVEUR : " << std::endl << std::string(buffer, iResult) << std::endl;
+                std::cerr << std::endl << "-> FICHIER DEMANDÉ INEXISTANT !" << std::endl;
             }
-            /* FIN DE LA SECTION */
+        }
+        /* FIN DE LA SECTION */
 
-        } while (choice != 4);
-    }
+        /* SECTION - TRANSMETTRE UN FICHIER */
+        /*if (choice == 2)
+        {
+
+        }*/
+        /* FIN DE LA SECTION */
+
+        /* SECTION - COMMANDE WINDOWS */
+        if (choice == 3)
+        {
+            // Affiche et envoie la commande au serveur
+            std::string command;
+            std::cout << "Entrez la commande à exécuter sur le serveur: ";
+            std::cin.ignore();
+            std::getline(std::cin, command);
+
+            std::cout << "commande : " << command << std::endl;
+
+            // Envoi de la commande au serveur
+            iResult = send(ConnectSocket, command.c_str(), command.length(), 0);
+            if (iResult == SOCKET_ERROR)
+            {
+                std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
+                closesocket(ConnectSocket);
+                WSACleanup();
+                return 1;
+            }
+
+            // Réception de la réponse du serveur
+            memset(buffer, 0, BUFFER_SIZE);
+            iResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
+            if (iResult == SOCKET_ERROR)
+            {
+                std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
+                closesocket(ConnectSocket);
+                WSACleanup();
+                return 1;
+            }
+            std::cout << std::endl << "-> RÉPONSE DU SERVEUR : " << std::endl << std::string(buffer, iResult) << std::endl;
+        }
+        /* FIN DE LA SECTION */
+
+    } while (choice != 4);  //... Tant qu'il ne se déconnecte pas.
+
 
     //Déconnexion du client.
     std::cout << std::endl << "-> ARRÊT DE LA CONNEXION ..." << std::endl;
@@ -329,6 +292,7 @@ int __cdecl main(int argc, char** argv)
         WSACleanup();
         return 1;
     }
+
 
     //Libération des ressources.
     closesocket(ConnectSocket);
