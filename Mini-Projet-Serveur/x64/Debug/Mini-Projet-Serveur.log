@@ -1,8 +1,7 @@
 ﻿  Mini-Projet-Serveur.cpp
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(63,57): warning C4101: 'e' : variable locale non référencée
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(303,88): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(371,42): warning C4244: 'initialisation' : conversion de 'std::streamoff' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(393,84): warning C4244: 'argument' : conversion de 'std::streamsize' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(447,98): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(108,9): warning C4101: 'iSendResult' : variable locale non référencée
-  Mini-Projet-Serveur.vcxproj -> C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\x64\Debug\Mini-Projet-Serveur.exe
+C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(286,38): warning C4244: 'initialisation' : conversion de 'std::streamoff' en 'int', perte possible de données
+C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(308,80): warning C4244: 'argument' : conversion de 'std::streamsize' en 'int', perte possible de données
+C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(373,98): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(52,9): warning C4101: 'iSendResult' : variable locale non référencée
+C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(437,57): warning C4101: 'e' : variable locale non référencée
+  Mini-Projet-Serveur.vcxproj -> C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Serveur\x64\Debug\Mini-Projet-Serveur.exe
