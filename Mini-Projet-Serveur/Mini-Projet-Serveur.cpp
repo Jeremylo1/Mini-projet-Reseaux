@@ -35,9 +35,6 @@ https://learn.microsoft.com/fr-fr/windows/win32/winsock/complete-server-code */
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
 
-const std::string ID_CODE = "id123";  //Identifiant correct.
-const std::string PASS_CODE = "mdp";  //Mot de passe correct.
-
 //Prototypes.
 void executeWindowsCommand(const std::string& cmd, std::string& output, std::string& currentDirectory);
 
@@ -152,62 +149,159 @@ int __cdecl main(void)
             return 1;
         }
 
-        std::cout << "---> TENTATIVE DE CONNEXION" << std::endl;  //À enlever !!!
+        std::cout << "---> CONNEXION D'UN CLIENT" << std::endl;  //À enlever !!!
 
-        /* SECTION - VALIDATION DES CODES D'ACCÈS */
-        //Réception des codes d'accès du client.
-        iResult = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
-        if (iResult == SOCKET_ERROR)
+        //Le client a accès au serveur.
+        do
         {
-            std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
-            closesocket(ClientSocket);
-            WSACleanup();
-            return 1;
-        }
-
-        //Création d'une chaîne de caractères contenant les codes à valider.
-        std::string accessCode(buffer, iResult);
-
-        //Extraction de l'identifiant et du mot de passe.
-        size_t found = accessCode.find("~");
-        std::string id = accessCode.substr(0, found);
-        std::string password = accessCode.substr(found + 1, (accessCode.size() - (found + 1)));
-
-        //Validation des codes d'accès.
-        if ((id == ID_CODE) && (password == PASS_CODE))
-        {
-            iResult = send(ClientSocket, "ACCÈS AUTORISÉ", 14, 0);
+            //Réception du choix de l'option du client (menu principal).
+            iResult = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
             if (iResult == SOCKET_ERROR)
             {
-                std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
+                std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
                 closesocket(ClientSocket);
                 WSACleanup();
                 return 1;
             }
-            checkedCode = true;
-        }
-        else
-        {
-            iResult = send(ClientSocket, "ACCÈS REFUSÉ", 12, 0);
-            if (iResult == SOCKET_ERROR)
+            //Conversion en entier.
+            choice = std::stoi(std::string(buffer, iResult));
+
+            /* SECTION - TÉLÉCHARGER UN FICHIER */
+            if (choice == 1)
             {
-                std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
-                closesocket(ClientSocket);
-                WSACleanup();
-                return 1;
+                std::cout << "---> OPTION DE TÉLÉCHARGEMENT CHOISI" << std::endl;  //À enlever !!!
+
+                //On fait une liste de fichiers du répertoire courant.
+                std::string fileListChecked = "";  //Pour le processus de validation de nom de fichier.
+                WIN32_FIND_DATA fileData;
+                HANDLE hFind = FindFirstFile(("*"), &fileData);
+
+                if (hFind != INVALID_HANDLE_VALUE)
+                {
+                    do
+                    {
+                        if (!(fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+                        {
+                            fileListChecked += "#";
+                            fileListChecked += fileData.cFileName;
+                            fileListChecked += "~";
+                        }
+                    } while (FindNextFile(hFind, &fileData));
+                    FindClose(hFind);
+                }
+
+                //Réception du nom de fichier à télécharger.
+                int receivedBytes = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
+                if (receivedBytes <= 0)
+                {
+                    std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
+                    closesocket(ClientSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
+                std::string fileName(buffer);
+
+                //Vérification de l'existence du fichier demandé.
+                size_t found = fileListChecked.find("#" + fileName + "~");
+
+                //Le fichier existe.
+                if (found != std::string::npos)
+                {
+                    iResult = send(ClientSocket, "NOM VALIDE", 10, 0);
+                    if (iResult == SOCKET_ERROR)
+                    {
+                        std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
+                        closesocket(ClientSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+                    std::cout << "-----> NOM DE FICHIER VALIDE" << std::endl;  //À enlever !!!
+
+                    //Ouverture du fichier (situé dans le répertoire courant).
+                    std::ifstream file(fileName, std::ios::binary);
+                    if (!file.is_open())
+                    {
+                        std::cerr << "Impossible d'ouvrir le fichier demandé !" << std::endl;
+                        closesocket(ClientSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+
+                    //Récupération de la taille du fichier.
+                    file.seekg(0, std::ios::end);
+                    int fileSize = file.tellg();
+                    file.seekg(0, std::ios::beg);
+
+                    //Envoi de la taille du fichier au client.
+                    iResult = send(ClientSocket, (char*)&fileSize, sizeof(fileSize), 0);
+                    if (iResult == SOCKET_ERROR)
+                    {
+                        std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
+                        closesocket(ClientSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+
+                    //Envoi du fichier par parties.
+                    int sentBytes;
+                    int totalBytesSent = 0;
+
+                    while ((totalBytesSent < fileSize))
+                    {
+                        file.read(recvbuf, recvbuflen);
+
+                        //Envoi des données au client.
+                        sentBytes = send(ClientSocket, recvbuf, file.gcount(), 0);
+                        if (sentBytes == SOCKET_ERROR)
+                        {
+                            std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
+                            closesocket(ClientSocket);
+                            WSACleanup();
+                            return 1;
+                        }
+
+                        //Mise à jour du nombre total de bytes envoyés.
+                        totalBytesSent += sentBytes;
+                    }
+                    std::cout << "-----> FICHIER ENVOYÉ AU CLIENT" << std::endl;  //À enlever !!!
+
+                    // Fermeture du fichier.
+                    file.close();
+                }
+                //Le fichier n'existe pas.
+                else
+                {
+                    iResult = send(ClientSocket, "NOM INVALIDE", 12, 0);
+                    if (iResult == SOCKET_ERROR)
+                    {
+                        std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
+                        closesocket(ClientSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+                    std::cout << "-----> NOM DE FICHIER INVALIDE" << std::endl;  //À enlever !!!
+                }
             }
-            checkedCode = false;
-        }
-        /* FIN DE LA SECTION */
+            /* FIN DE LA SECTION */
 
-        //Vérification du code d'accès du client.
-        if (checkedCode)
-        {
-            std::cout << "---> CONNEXION ACCEPTÉE" << std::endl;  //À enlever !!!
-
-            do
+            /* SECTION - TRANSMETTRE UN FICHIER */
+            /*if (choice == 2)
             {
-                //Réception du choix de l'option du client (menu principal).
+                std::cout << "---> OPTION DE TÉLÉVERSEMENT CHOISI ..." << std::endl;
+                    
+            }*/
+            /* FIN DE LA SECTION */
+
+            /* SECTION - COMMANDE WINDOWS */
+            if (choice == 3)
+            {
+                std::cout << "---> OPTION DE COMMANDE WINDOWS CHOISI ..." << std::endl;  //À enlever !!!
+
+                //Réinitialisation du buffer.
+                memset(buffer, 0, BUFFER_SIZE);
+
+                //Réception de la commande du client.
                 iResult = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
                 if (iResult == SOCKET_ERROR)
                 {
@@ -216,177 +310,26 @@ int __cdecl main(void)
                     WSACleanup();
                     return 1;
                 }
-                //Conversion en entier.
-                choice = std::stoi(std::string(buffer, iResult));
+                std::string command(buffer, iResult);
 
-                /* SECTION - TÉLÉCHARGER UN FICHIER */
-                if (choice == 1)
+                //Exécution de la commande.
+                std::string commandOutput;
+                executeWindowsCommand(command, commandOutput, currentDirectory);
+
+                //Envoi du résultat de la commande au client.
+                iResult = send(ClientSocket, commandOutput.c_str(), commandOutput.length(), 0);
+                if (iResult == SOCKET_ERROR)
                 {
-                    std::cout << "---> OPTION DE TÉLÉCHARGEMENT CHOISI" << std::endl;  //À enlever !!!
-
-                    //On fait une liste de fichiers du répertoire courant.
-                    std::string fileListChecked = "";  //Pour le processus de validation de nom de fichier.
-                    WIN32_FIND_DATA fileData;
-                    HANDLE hFind = FindFirstFile(("*"), &fileData);
-
-                    if (hFind != INVALID_HANDLE_VALUE)
-                    {
-                        do
-                        {
-                            if (!(fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-                            {
-                                fileListChecked += "#";
-                                fileListChecked += fileData.cFileName;
-                                fileListChecked += "~";
-                            }
-                        } while (FindNextFile(hFind, &fileData));
-                        FindClose(hFind);
-                    }
-
-                    //Réception du nom de fichier à télécharger.
-                    int receivedBytes = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
-                    if (receivedBytes <= 0)
-                    {
-                        std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
-                        closesocket(ClientSocket);
-                        WSACleanup();
-                        return 1;
-                    }
-
-                    std::string fileName(buffer);
-
-                    //Vérification de l'existence du fichier demandé.
-                    size_t found = fileListChecked.find("#" + fileName + "~");
-
-                    //Le fichier existe.
-                    if (found != std::string::npos)
-                    {
-                        iResult = send(ClientSocket, "NOM VALIDE", 10, 0);
-                        if (iResult == SOCKET_ERROR)
-                        {
-                            std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
-                            closesocket(ClientSocket);
-                            WSACleanup();
-                            return 1;
-                        }
-                        std::cout << "-----> NOM DE FICHIER VALIDE" << std::endl;  //À enlever !!!
-
-                        //Ouverture du fichier (situé dans le répertoire courant).
-                        std::ifstream file(fileName, std::ios::binary);
-                        if (!file.is_open())
-                        {
-                            std::cerr << "Impossible d'ouvrir le fichier demandé !" << std::endl;
-                            closesocket(ClientSocket);
-                            WSACleanup();
-                            return 1;
-                        }
-
-                        //Récupération de la taille du fichier.
-                        file.seekg(0, std::ios::end);
-                        int fileSize = file.tellg();
-                        file.seekg(0, std::ios::beg);
-
-                        //Envoi de la taille du fichier au client.
-                        iResult = send(ClientSocket, (char*)&fileSize, sizeof(fileSize), 0);
-                        if (iResult == SOCKET_ERROR)
-                        {
-                            std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
-                            closesocket(ClientSocket);
-                            WSACleanup();
-                            return 1;
-                        }
-
-                        //Envoi du fichier par parties.
-                        int sentBytes;
-                        int totalBytesSent = 0;
-
-                        while ((totalBytesSent < fileSize))
-                        {
-                            file.read(recvbuf, recvbuflen);
-
-                            //Envoi des données au client.
-                            sentBytes = send(ClientSocket, recvbuf, file.gcount(), 0);
-                            if (sentBytes == SOCKET_ERROR)
-                            {
-                                std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
-                                closesocket(ClientSocket);
-                                WSACleanup();
-                                return 1;
-                            }
-
-                            //Mise à jour du nombre total de bytes envoyés.
-                            totalBytesSent += sentBytes;
-                        }
-                        std::cout << "-----> FICHIER ENVOYÉ AU CLIENT" << std::endl;  //À enlever !!!
-
-                        // Fermeture du fichier.
-                        file.close();
-                    }
-                    //Le fichier n'existe pas.
-                    else
-                    {
-                        iResult = send(ClientSocket, "NOM INVALIDE", 12, 0);
-                        if (iResult == SOCKET_ERROR)
-                        {
-                            std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
-                            closesocket(ClientSocket);
-                            WSACleanup();
-                            return 1;
-                        }
-                        std::cout << "-----> NOM DE FICHIER INVALIDE" << std::endl;  //À enlever !!!
-                    }
+                    std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
+                    closesocket(ClientSocket);
+                    WSACleanup();
+                    return 1;
                 }
-                /* FIN DE LA SECTION */
+            }
+            /* FIN DE LA SECTION */
 
-                /* SECTION - TRANSMETTRE UN FICHIER */
-                /*if (choice == 2)
-                {
-                    std::cout << "---> OPTION DE TÉLÉVERSEMENT CHOISI ..." << std::endl;
-                    
-                }*/
-                /* FIN DE LA SECTION */
+        } while (choice != 4);
 
-                /* SECTION - COMMANDE WINDOWS */
-                if (choice == 3)
-                {
-                    std::cout << "---> OPTION DE COMMANDE WINDOWS CHOISI ..." << std::endl;  //À enlever !!!
-
-                    //Réinitialisation du buffer.
-                    memset(buffer, 0, BUFFER_SIZE);
-
-                    //Réception de la commande du client.
-                    iResult = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
-                    if (iResult == SOCKET_ERROR)
-                    {
-                        std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
-                        closesocket(ClientSocket);
-                        WSACleanup();
-                        return 1;
-                    }
-                    std::string command(buffer, iResult);
-
-                    //Exécution de la commande.
-                    std::string commandOutput;
-                    executeWindowsCommand(command, commandOutput, currentDirectory);
-
-                    //Envoi du résultat de la commande au client.
-                    iResult = send(ClientSocket, commandOutput.c_str(), commandOutput.length(), 0);
-                    if (iResult == SOCKET_ERROR)
-                    {
-                        std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
-                        closesocket(ClientSocket);
-                        WSACleanup();
-                        return 1;
-                    }
-                }
-                /* FIN DE LA SECTION */
-
-            } while (choice != 4);
-        }
-        else
-        {
-            std::cout << "---> CONNEXION REFUSÉE" << std::endl;  //À enlever !!!
-        }
 
         //Déconnexion du serveur.
         std::cout << "---> DÉCONNEXION DU CLIENT" << std::endl;  //À enlever !!!
@@ -400,6 +343,7 @@ int __cdecl main(void)
             return 1;
         }
     }
+
 
     //Libération des ressources.
     closesocket(ListenSocket);
@@ -418,7 +362,7 @@ void executeWindowsCommand(const std::string& cmd, std::string& output, std::str
     std::string commandToExecute;
 
     // Utiliser le répertoire courant
-    commandToExecute = "cd " + currentDirectory + " && ";
+    commandToExecute = "cd " + currentDirectory;
 
     // Si la commande est "cd", ajoutez " && echo %cd%"
     // Si la commande est "cd", changez le répertoire de travail.

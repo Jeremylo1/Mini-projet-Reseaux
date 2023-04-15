@@ -1,7 +1,6 @@
 ﻿  Mini-Projet-Client.cpp
-C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(137,77): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(167,81): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(186,87): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(296,83): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(387,45): warning C4101: 'ex' : variable locale non référencée
+C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(129,77): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(148,83): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(258,79): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(350,45): warning C4101: 'ex' : variable locale non référencée
   Mini-Projet-Client.vcxproj -> C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Client\x64\Debug\Mini-Projet-Client.exe
