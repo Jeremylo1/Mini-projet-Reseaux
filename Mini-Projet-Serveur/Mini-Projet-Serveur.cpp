@@ -46,7 +46,7 @@ int __cdecl main(void)
 
     WSADATA wsaData;
     int iResult;
-    int iSendResult;
+    int ackResult;
 
     SOCKET ListenSocket = INVALID_SOCKET;
     SOCKET ClientSocket = INVALID_SOCKET;
@@ -160,6 +160,17 @@ int __cdecl main(void)
                 WSACleanup();
                 return 1;
             }
+
+            //ACK.
+            ackResult = send(ClientSocket, "OK", 2, 0);
+            if (ackResult == SOCKET_ERROR)
+            {
+                std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                closesocket(ClientSocket);
+                WSACleanup();
+                return 1;
+            }
+
             //Conversion en entier.
             choice = std::stoi(std::string(buffer, iResult));
 
@@ -197,6 +208,16 @@ int __cdecl main(void)
                     return 1;
                 }
 
+                //ACK.
+                ackResult = send(ClientSocket, "OK", 2, 0);
+                if (ackResult == SOCKET_ERROR)
+                {
+                    std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                    closesocket(ClientSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
                 std::string fileName(buffer);
 
                 //Vérification de l'existence du fichier demandé.
@@ -214,6 +235,17 @@ int __cdecl main(void)
                         WSACleanup();
                         return 1;
                     }
+
+                    //ACK.
+                    ackResult = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
+                    if (ackResult == SOCKET_ERROR)
+                    {
+                        std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                        closesocket(ClientSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+
                     std::cout << "-----> NOM DE FICHIER VALIDE !" << std::endl;  //À enlever !!!
 
                     //Ouverture du fichier (situé dans le répertoire courant).
@@ -241,6 +273,16 @@ int __cdecl main(void)
                         return 1;
                     }
 
+                    //ACK.
+                    ackResult = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
+                    if (ackResult == SOCKET_ERROR)
+                    {
+                        std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                        closesocket(ClientSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+
                     //Envoi du fichier par parties.
                     int sentBytes;
                     int totalBytesSent = 0;
@@ -262,6 +304,17 @@ int __cdecl main(void)
                         //Mise à jour du nombre total de bytes envoyés.
                         totalBytesSent += sentBytes;
                     }
+
+                    //ACK.
+                    ackResult = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
+                    if (ackResult == SOCKET_ERROR)
+                    {
+                        std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                        closesocket(ClientSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+
                     std::cout << "-----> FICHIER ENVOYÉ AU CLIENT !" << std::endl;  //À enlever !!!
 
                     // Fermeture du fichier.
@@ -278,6 +331,17 @@ int __cdecl main(void)
                         WSACleanup();
                         return 1;
                     }
+
+                    //ACK.
+                    ackResult = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
+                    if (ackResult == SOCKET_ERROR)
+                    {
+                        std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                        closesocket(ClientSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+
                     std::cout << "-----> NOM DE FICHIER INVALIDE !" << std::endl;  //À enlever !!!
                 }
             }
@@ -298,15 +362,35 @@ int __cdecl main(void)
                     return 1;
                 }
 
+                //ACK.
+                ackResult = send(ClientSocket, "OK", 2, 0);
+                if (ackResult == SOCKET_ERROR)
+                {
+                    std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                    closesocket(ClientSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
                 if (iResult == 10)  //Si le fichier à transmettre (par le client) existe.
                 {
-                    std::cerr << "-----> FICHIER À TRANSMETTRE VALIDE !" << std::endl;  //À enlever !!!
+                    std::cout << "-----> FICHIER À TRANSMETTRE VALIDE !" << std::endl;  //À enlever !!!
 
                     //Réception du nom de fichier transmis (par le client).
                     int receivedName = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
                     if (receivedName <= 0)
                     {
                         std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
+                        closesocket(ClientSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+
+                    //ACK.
+                    ackResult = send(ClientSocket, "OK", 2, 0);
+                    if (ackResult == SOCKET_ERROR)
+                    {
+                        std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
                         closesocket(ClientSocket);
                         WSACleanup();
                         return 1;
@@ -320,6 +404,16 @@ int __cdecl main(void)
                     if (iResult == SOCKET_ERROR)
                     {
                         std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
+                        closesocket(ClientSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+
+                    //ACK.
+                    ackResult = send(ClientSocket, "OK", 2, 0);
+                    if (ackResult == SOCKET_ERROR)
+                    {
+                        std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
                         closesocket(ClientSocket);
                         WSACleanup();
                         return 1;
@@ -370,6 +464,16 @@ int __cdecl main(void)
                     }
                     else
                     {
+                        //ACK.
+                        ackResult = send(ClientSocket, "OK", 2, 0);
+                        if (ackResult == SOCKET_ERROR)
+                        {
+                            std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                            closesocket(ClientSocket);
+                            WSACleanup();
+                            return 1;
+                        }
+
                         std::cout << "-----> FICHIER TRANSMIS AVEC SUCCÈS !" << std::endl;  //À enlever !!!
                     }
 
@@ -400,6 +504,17 @@ int __cdecl main(void)
                     WSACleanup();
                     return 1;
                 }
+
+                //ACK.
+                ackResult = send(ClientSocket, "OK", 2, 0);
+                if (ackResult == SOCKET_ERROR)
+                {
+                    std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                    closesocket(ClientSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
                 std::string command(buffer, iResult);
 
                 //Exécution de la commande.
@@ -411,6 +526,16 @@ int __cdecl main(void)
                 if (iResult == SOCKET_ERROR)
                 {
                     std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
+                    closesocket(ClientSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
+                //ACK.
+                ackResult = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
+                if (ackResult == SOCKET_ERROR)
+                {
+                    std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
                     closesocket(ClientSocket);
                     WSACleanup();
                     return 1;
@@ -451,16 +576,12 @@ void executeWindowsCommand(const std::string& cmd, std::string& output, std::str
 {
     std::string commandToExecute;
 
-    // Utiliser le répertoire courant
-    commandToExecute = "cd " + currentDirectory;
-
-    // Si la commande est "cd", ajoutez " && echo %cd%"
-    // Si la commande est "cd", changez le répertoire de travail.
+    //Si la commande est "cd", changez le répertoire de travail.
     if (cmd.substr(0, 2) == "cd")
     {
         std::string newDir = cmd.substr(3);
         if (newDir.back() == '\n') {
-            newDir.pop_back(); // Supprimez le caractère de nouvelle ligne, s'il y en a un.
+            newDir.pop_back();   //Supprimer le caractère de nouvelle ligne, s'il y en a un.
         }
         try
         {
@@ -488,12 +609,12 @@ void executeWindowsCommand(const std::string& cmd, std::string& output, std::str
             output += buffer.data();
     }
 
-    // Si la commande était "cd", mettre à jour le répertoire courant
+    //Si la commande était "cd", mettre à jour le répertoire courant.
     if (cmd.substr(0, 2) == "cd")
     {
         currentDirectory = output;
 
-        // Supprimer le caractère de nouvelle ligne à la fin de currentDirectory, s'il est présent
+        //Supprimer le caractère de nouvelle ligne à la fin de currentDirectory, s'il est présent.
         if (!currentDirectory.empty() && currentDirectory.back() == '\n')
         {
             currentDirectory.pop_back();
