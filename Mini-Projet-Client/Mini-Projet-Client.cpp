@@ -45,6 +45,7 @@ int __cdecl main(int argc, char** argv)
     struct addrinfo* result = NULL, * ptr = NULL, hints;
 
     int iResult;
+    int ackResult;
     char recvbuf[DEFAULT_BUFLEN];
     int recvbuflen = DEFAULT_BUFLEN;
     const int BUFFER_SIZE = 1024;
@@ -135,6 +136,16 @@ int __cdecl main(int argc, char** argv)
             return 1;
         }
 
+        //ACK.
+        ackResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
+        if (ackResult == SOCKET_ERROR)
+        {
+			std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+			closesocket(ConnectSocket);
+			WSACleanup();
+			return 1;
+		}
+
         /* SECTION - TÉLÉCHARGER UN FICHIER */
         if (choice == 1)
         {
@@ -154,6 +165,16 @@ int __cdecl main(int argc, char** argv)
                 return 1;
             }
 
+            //ACK.
+            ackResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
+            if (ackResult == SOCKET_ERROR)
+            {
+                std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                closesocket(ConnectSocket);
+                WSACleanup();
+                return 1;
+            }
+
             //Réception de la vérification de l'existence du fichier.
             iResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
             if (iResult == SOCKET_ERROR)
@@ -164,6 +185,16 @@ int __cdecl main(int argc, char** argv)
                 return 1;
             }
 
+            //ACK
+            ackResult = send(ConnectSocket, "OK", 2, 0);
+            if (ackResult == SOCKET_ERROR)
+            {
+				std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+				closesocket(ConnectSocket);
+				WSACleanup();
+				return 1;
+			}
+
             if (iResult == 10)  //Si le fichier demandé existe.
             {
                 //Réception de la taille du fichier.
@@ -172,6 +203,16 @@ int __cdecl main(int argc, char** argv)
                 if (iResult == SOCKET_ERROR)
                 {
                     std::cerr << "Erreur dans la réception des données : " << WSAGetLastError() << std::endl;
+                    closesocket(ConnectSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
+                //ACK
+                ackResult = send(ConnectSocket, "OK", 2, 0);
+                if (ackResult == SOCKET_ERROR)
+                {
+                    std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
                     closesocket(ConnectSocket);
                     WSACleanup();
                     return 1;
@@ -222,6 +263,16 @@ int __cdecl main(int argc, char** argv)
                 }
                 else
                 {
+                    //ACK
+                    ackResult = send(ConnectSocket, "OK", 2, 0);
+                    if (ackResult == SOCKET_ERROR)
+                    {
+                        std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                        closesocket(ConnectSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+
                     std::cout << std::endl << "-> FICHIER TÉLÉCHARGÉ AVEC SUCCÈS !" << std::endl;
                     std::cout << "-> Localisation : dans le répertoire courant." << std::endl;
                 }
@@ -279,13 +330,35 @@ int __cdecl main(int argc, char** argv)
                     WSACleanup();
                     return 1;
                 }
+
+                //ACK.
+                ackResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
+                if (ackResult == SOCKET_ERROR)
+                {
+                    std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                    closesocket(ConnectSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
                 std::cout << "-> NOM DE FICHIER VALIDE !" << std::endl;
 
                 //Envoi du nom de fichier à transmettre au serveur.
+                std::cout << "fileExportName.size() + 1" << fileExportName.size() + 1 << std::endl;
                 iResult = send(ConnectSocket, fileExportName.c_str(), fileExportName.size() + 1, 0);
                 if (iResult == SOCKET_ERROR)
                 {
                     std::cerr << "Erreur dans l'envoi des données : " << WSAGetLastError() << std::endl;
+                    closesocket(ConnectSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
+                //ACK.
+                ackResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
+                if (ackResult == SOCKET_ERROR)
+                {
+                    std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
                     closesocket(ConnectSocket);
                     WSACleanup();
                     return 1;
@@ -316,6 +389,16 @@ int __cdecl main(int argc, char** argv)
                     return 1;
                 }
 
+                //ACK.
+                ackResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
+                if (ackResult == SOCKET_ERROR)
+                {
+                    std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                    closesocket(ConnectSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
                 //Envoi du fichier par parties.
                 int sentBytes;
                 int totalBytesSent = 0;
@@ -337,6 +420,17 @@ int __cdecl main(int argc, char** argv)
                     //Mise à jour du nombre total de bytes envoyés.
                     totalBytesSent += sentBytes;
                 }
+
+                //ACK.
+                ackResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
+                if (ackResult == SOCKET_ERROR)
+                {
+                    std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                    closesocket(ConnectSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
                 std::cout << "-> FICHIER ENVOYÉ AU SERVEUR AVEC SUCCÈS !" << std::endl;
 
                 // Fermeture du fichier.
@@ -353,6 +447,17 @@ int __cdecl main(int argc, char** argv)
                     WSACleanup();
                     return 1;
                 }
+
+                //ACK.
+                ackResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
+                if (ackResult == SOCKET_ERROR)
+                {
+                    std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                    closesocket(ConnectSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
                 std::cout << "-> FICHIER À TRANSMETTRE INEXISTANT !" << std::endl;
             }
         }
@@ -379,7 +484,17 @@ int __cdecl main(int argc, char** argv)
                 return 1;
             }
 
-            // Réception de la réponse du serveur
+            //ACK.
+            ackResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
+            if (ackResult == SOCKET_ERROR)
+            {
+                std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                closesocket(ConnectSocket);
+                WSACleanup();
+                return 1;
+            }
+
+            //Réception du résultat de la commande.
             memset(buffer, 0, BUFFER_SIZE);
             iResult = recv(ConnectSocket, buffer, BUFFER_SIZE, 0);
             if (iResult == SOCKET_ERROR)
@@ -389,6 +504,17 @@ int __cdecl main(int argc, char** argv)
                 WSACleanup();
                 return 1;
             }
+
+            //ACK
+            ackResult = send(ConnectSocket, "OK", 2, 0);
+            if (ackResult == SOCKET_ERROR)
+            {
+                std::cerr << "Erreur ACK : " << WSAGetLastError() << std::endl;
+                closesocket(ConnectSocket);
+                WSACleanup();
+                return 1;
+            }
+
             std::cout << "-> RÉPONSE DU SERVEUR : " << std::endl << std::string(buffer, iResult) << std::endl;
         }
         /* FIN DE LA SECTION */
