@@ -52,6 +52,7 @@ int __cdecl main(int argc, char** argv)
     char buffer[BUFFER_SIZE];
     int choice = 0;
 
+    /* DEBUT CODE MICROSOFT */
     //Validation des paramètres.
     if (argc != 2)
     {
@@ -118,6 +119,7 @@ int __cdecl main(int argc, char** argv)
     {
         std::cout << std::endl << "-> CONNEXION AU SERVEUR ..." << std::endl;
     }
+    /* FIN CODE MICROSOFT */
 
     //Accès au serveur.
     do  //Le client peut effectuer des actions ...

