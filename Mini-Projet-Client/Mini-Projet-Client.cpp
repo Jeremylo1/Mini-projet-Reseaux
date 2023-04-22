@@ -18,8 +18,6 @@ https://learn.microsoft.com/fr-fr/windows/win32/winsock/complete-client-code */
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -346,7 +344,6 @@ int __cdecl main(int argc, char** argv)
                 std::cout << "-> NOM DE FICHIER VALIDE !" << std::endl;
 
                 //Envoi du nom de fichier à transmettre au serveur.
-                std::cout << "fileExportName.size() + 1" << fileExportName.size() + 1 << std::endl;
                 iResult = send(ConnectSocket, fileExportName.c_str(), fileExportName.size() + 1, 0);
                 if (iResult == SOCKET_ERROR)
                 {

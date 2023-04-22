@@ -1,8 +1,6 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\Microsoft.Common.CurrentVersion.targets(5652,5): warning MSB3061: Impossible de supprimer le fichier "C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\x64\Debug\Mini-Projet-Serveur.exe". L'accès au chemin d'accès 'C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\x64\Debug\Mini-Projet-Serveur.exe' est refusé.
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppClean.targets(77,5): warning : L'accès au chemin d'accès 'c:\users\jerem\onedrive\documents\github\mini-projet-reseaux\mini-projet-serveur\x64\debug\mini-projet-serveur.exe' est refusé.
-  Mini-Projet-Serveur.cpp
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(268,34): warning C4244: 'initialisation' : conversion de 'std::streamoff' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(300,76): warning C4244: 'argument' : conversion de 'std::streamsize' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(530,94): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(597,57): warning C4101: 'e' : variable locale non référencée
-LINK : fatal error LNK1104: impossible d'ouvrir le fichier 'C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\x64\Debug\Mini-Projet-Serveur.exe'
+﻿  Mini-Projet-Serveur.cpp
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(266,34): warning C4244: 'initialisation' : conversion de 'std::streamoff' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(298,76): warning C4244: 'argument' : conversion de 'std::streamsize' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(528,94): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\Mini-Projet-Serveur.cpp(595,57): warning C4101: 'e' : variable locale non référencée
+  Mini-Projet-Serveur.vcxproj -> C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Serveur\x64\Debug\Mini-Projet-Serveur.exe

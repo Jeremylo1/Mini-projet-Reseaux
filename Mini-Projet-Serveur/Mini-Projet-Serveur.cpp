@@ -18,8 +18,6 @@ https://learn.microsoft.com/fr-fr/windows/win32/winsock/complete-server-code */
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <iostream>
 #include <fstream>
 #include <string>

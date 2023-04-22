@@ -1,2 +1,2 @@
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\x64\Debug\Mini-Projet-Client.exe
 C:\Users\Shadow\Documents\UQAC\Reseaux_ordinateurs\Mini-Projet\Mini-projet-Reseaux\Mini-Projet-Client\x64\Debug\Mini-Projet-Client.exe
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\x64\Debug\Mini-Projet-Client.exe

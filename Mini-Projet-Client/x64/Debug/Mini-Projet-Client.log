@@ -1,9 +1,9 @@
 ﻿  Mini-Projet-Client.cpp
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(132,77): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(161,83): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(350,99): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(381,33): warning C4244: 'initialisation' : conversion de 'std::streamoff' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(413,73): warning C4244: 'argument' : conversion de 'std::streamsize' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(480,79): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
-C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(585,45): warning C4101: 'ex' : variable locale non référencée
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(130,77): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(159,83): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(347,99): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(378,33): warning C4244: 'initialisation' : conversion de 'std::streamoff' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(410,73): warning C4244: 'argument' : conversion de 'std::streamsize' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(477,79): warning C4267: 'argument' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\Mini-Projet-Client.cpp(582,45): warning C4101: 'ex' : variable locale non référencée
   Mini-Projet-Client.vcxproj -> C:\Users\jerem\OneDrive\Documents\GitHub\Mini-projet-Reseaux\Mini-Projet-Client\x64\Debug\Mini-Projet-Client.exe
