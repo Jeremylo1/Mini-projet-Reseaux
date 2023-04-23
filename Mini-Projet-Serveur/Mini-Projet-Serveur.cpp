@@ -180,7 +180,7 @@ int __cdecl main(void)
             /* SECTION - TÉLÉCHARGER UN FICHIER */
             if (choice == 1)
             {
-                std::cout << "---> OPTION DE TÉLÉCHARGEMENT CHOISI ..." << std::endl;  //À enlever !!!
+                std::cout << "---> OPTION DE TÉLÉCHARGEMENT CHOISI ..." << std::endl;
 
                 //On fait une liste de fichiers du répertoire courant.
                 std::string fileListChecked = "";  //Pour le processus de validation de nom de fichier.
@@ -249,7 +249,7 @@ int __cdecl main(void)
                         return 1;
                     }
 
-                    std::cout << "-----> NOM DE FICHIER VALIDE !" << std::endl;  //À enlever !!!
+                    std::cout << "-----> NOM DE FICHIER VALIDE !" << std::endl;
 
                     //Ouverture du fichier (situé dans le répertoire courant).
                     std::ifstream file(fileName, std::ios::binary);
@@ -318,7 +318,7 @@ int __cdecl main(void)
                         return 1;
                     }
 
-                    std::cout << "-----> FICHIER ENVOYÉ AU CLIENT !" << std::endl;  //À enlever !!!
+                    std::cout << "-----> FICHIER ENVOYÉ AU CLIENT !" << std::endl;
 
                     // Fermeture du fichier.
                     file.close();
@@ -345,7 +345,7 @@ int __cdecl main(void)
                         return 1;
                     }
 
-                    std::cout << "-----> NOM DE FICHIER INVALIDE !" << std::endl;  //À enlever !!!
+                    std::cout << "-----> NOM DE FICHIER INVALIDE !" << std::endl;
                 }
             }
             /* FIN DE LA SECTION */
@@ -353,7 +353,7 @@ int __cdecl main(void)
             /* SECTION - TRANSMETTRE UN FICHIER */
             if (choice == 2)
             {
-                std::cout << "---> OPTION DE TÉLÉVERSEMENT CHOISI ..." << std::endl;  //À enlever !!!
+                std::cout << "---> OPTION DE TÉLÉVERSEMENT CHOISI ..." << std::endl;
 
                 //Réception de la vérification de l'existence du fichier.
                 iResult = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
@@ -377,7 +377,7 @@ int __cdecl main(void)
 
                 if (iResult == 10)  //Si le fichier à transmettre (par le client) existe.
                 {
-                    std::cout << "-----> FICHIER À TRANSMETTRE VALIDE !" << std::endl;  //À enlever !!!
+                    std::cout << "-----> FICHIER À TRANSMETTRE VALIDE !" << std::endl;
 
                     //Réception du nom de fichier transmis (par le client).
                     int receivedName = recv(ClientSocket, buffer, BUFFER_SIZE, 0);
@@ -477,7 +477,7 @@ int __cdecl main(void)
                             return 1;
                         }
 
-                        std::cout << "-----> FICHIER TRANSMIS AVEC SUCCÈS !" << std::endl;  //À enlever !!!
+                        std::cout << "-----> FICHIER TRANSMIS AVEC SUCCÈS !" << std::endl;
                     }
 
                     //Fermeture du fichier.
@@ -485,7 +485,7 @@ int __cdecl main(void)
                 }
                 else
                 {
-                    std::cerr << "-----> FICHIER À TRANSMETTRE INEXISTANT !" << std::endl;  //À enlever !!!
+                    std::cerr << "-----> FICHIER À TRANSMETTRE INEXISTANT !" << std::endl;
                 }
             }
             /* FIN DE LA SECTION */
@@ -493,7 +493,7 @@ int __cdecl main(void)
             /* SECTION - COMMANDE WINDOWS */
             if (choice == 3)
             {
-                std::cout << "---> OPTION DE COMMANDE WINDOWS CHOISI ..." << std::endl;  //À enlever !!!
+                std::cout << "---> OPTION DE COMMANDE WINDOWS CHOISI ..." << std::endl;
 
                 //Réinitialisation du buffer.
                 memset(buffer, 0, BUFFER_SIZE);
@@ -550,7 +550,7 @@ int __cdecl main(void)
 
 
         //Déconnexion du serveur.
-        std::cout << "---> DÉCONNEXION DU CLIENT" << std::endl;  //À enlever !!!
+        std::cout << "---> DÉCONNEXION DU CLIENT" << std::endl;
 
         iResult = shutdown(ClientSocket, SD_SEND);
         if (iResult == SOCKET_ERROR)
